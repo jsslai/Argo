@@ -1,7 +1,7 @@
 # Decoding Enums
 
 Decoding Structs and Classes is a similar process, but Enums can mix things up.
-If your Enum inherrits from a Raw Type `String` or `Int`, then making it conform
+If your Enum inherits from a Raw Type `String` or `Int`, then making it conform
 to `Decodable` is as simple as pie. Let's look at a `Role` type enum:
 
 ```swift
