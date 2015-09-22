@@ -41,19 +41,25 @@ We can write `Decodable` for `FootRace` like so:
 extension FootRace: Decodable {
   static func decode(j: JSON) -> Decoded<FootRace> {
     switch j {
+
+    // First, make sure JSON is a number.
     case let .Number(n):
+
+      // Next, match the number to the enum case.
       switch n {
-      case 13.1: return pure(.HalfMarathon)
-      case 26.2: return pure(.Marathon)
-      case _ where n > 26.2: return pure(.UltraMarathon)
+
+      // When a case matches, use pure to wrap the enum in Decoded.
+      case 13.1: return pure(.HalfMarathon) // 13.1 miles is a half marathon distance.
+      case 26.2: return pure(.Marathon) // 26.2 miles is a marathon distance.
+      case _ where n > 26.2: return pure(.UltraMarathon) // Any distance over a marathon is considered an ultra marathon.
+
+      // Return an error if no case matched
       default: return .typeMismatch("marathon distance", actual: n)
       }
+
+    // Return an error if JSON is not a number.
     default: return .typeMismatch("String", actual: j)
     }
   }
 }
 ```
-
-The first thing we do is check to see if the `JSON` is a number. If so, we look
-for the matching enum case. Finally, we return the matching case using the
-`pure` function which will wrap the enum value in a `Decoded` type.
