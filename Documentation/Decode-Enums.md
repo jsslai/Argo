@@ -18,9 +18,13 @@ To make `Role` conform to `Decodable`, use this one line:
 extension Role: Decodable { }
 ```
 
-"THAT'S IT?! How?" You ask. Enums with a raw type like `String` or `Int`
+"THAT'S IT?! How?", you ask. Enums with a raw type like `String` or `Int`
 conform to `RawRepresentable` and we added a default [implementation] for these
-cases.
+cases. These types of enums can be assigned the raw value that represents each
+case or Swift will automatically assign a raw value for you. In this instance,
+each case has a raw value of a `String` that is that case name, like `case
+User = "User"`. With an `Int`, Swift would automatically assign the top case to
+`0` and increment by one for each case afterward.
 
 [implementation]: ../Argo/Extensions/RawRepresentable.swift
 
@@ -58,7 +62,7 @@ extension FootRace: Decodable {
       }
 
     // Return an error if JSON is not a number.
-    default: return .typeMismatch("String", actual: j)
+    default: return .typeMismatch("Number", actual: j)
     }
   }
 }
