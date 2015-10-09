@@ -19,12 +19,13 @@ extension Role: Decodable { }
 ```
 
 "THAT'S IT?! How?", you ask. Enums with a raw type like `String` or `Int`
-conform to `RawRepresentable` and we added a default [implementation] for these
-cases. These types of enums can be assigned the raw value that represents each
-case or Swift will automatically assign a raw value for you. In this instance,
-each case has a raw value of a `String` that is that case name, like `case
-User = "User"`. With an `Int`, Swift would automatically assign the top case to
-`0` and increment by one for each case afterward.
+conform to `RawRepresentable`. Enums that are `RawRepresentable` are given a
+default value by the Swift compiler. With `Int`, the first case is `0` and each
+case is one more than the previous case. With `String`, the default raw value
+is the case name. So for `Role`, the raw value that represents the case `User`
+is `"User"`. `RawRepresentable` enums also get a default initialize
+`init(rawValue: )`. We added a default [implementation] to Argo for `Int` and
+`String` enums so decoding can be this simple.
 
 [implementation]: ../Argo/Extensions/RawRepresentable.swift
 
@@ -47,18 +48,18 @@ extension FootRace: Decodable {
     switch j {
 
     // First, make sure JSON is a number.
-    case let .Number(n):
+    case let .Number(distance):
 
       // Next, match the number to the enum case.
-      switch n {
+      switch distance {
 
       // When a case matches, use pure to wrap the enum in Decoded.
       case 13.1: return pure(.HalfMarathon) // 13.1 miles is a half marathon distance.
       case 26.2: return pure(.Marathon) // 26.2 miles is a marathon distance.
-      case _ where n > 26.2: return pure(.UltraMarathon) // Any distance over a marathon is considered an ultra marathon.
+      case _ where distance > 26.2: return pure(.UltraMarathon) // Any distance over a marathon is considered an ultra marathon.
 
       // Return an error if no case matched
-      default: return .typeMismatch("marathon distance", actual: n)
+      default: return .typeMismatch("marathon distance", actual: distance)
       }
 
     // Return an error if JSON is not a number.
